@@ -1,0 +1,12 @@
+# Application
+DEBUG = False
+
+
+# Exceptions
+PROPAGATE_EXCEPTIONS = False
+
+
+# Database
+SQLALCHEMY_DATABASE_URI = ''
+SQLALCHEMY_RECORD_QUERIES = False
+SQLALCHEMY_TRACK_MODIFICATIONS = False

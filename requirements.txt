@@ -1,0 +1,6 @@
+Flask
+Flask-Migrate
+flask-sqlalchemy
+psycopg2-binary
+SQLAlchemy
+SQLAlchemy-Utils
