@@ -11,6 +11,12 @@ This step is optional, you can use system Python and its packages.
 `source /var/www/vhosts/cc/env/bin/activate`
 3. Install requirements  
 `pip install -r /var/www/vhosts/cc/core/reqiurements.txt`
+4. Copy `config_default.py` from the `src` directory
+and redefine configuration variables there.
+Provide path to the file via `CONFIG` environmental variable.
+5. Set `FLASK_APP` environmental variable (see [Running the application](#running-the-application)).
+6. Create/update database structure  
+`flask db upgrade` 
 
 ## Running the application
 ### Development
