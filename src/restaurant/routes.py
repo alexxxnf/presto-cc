@@ -5,6 +5,7 @@ from flask.views import MethodView
 
 from ..core.errors import NotFound
 from ..core.extensions import db
+from .marshallers import MenuItemSchema
 from .models import MenuItem, Modifier
 
 
@@ -32,9 +33,22 @@ class RestaurantItemList(MethodView):
             .join(Modifier, (Modifier.modifier_id==mod_alias.id) & (Modifier.restaurant_id==mod_alias.restaurant_id))\
             .join(main_cte, (main_cte.c.id==Modifier.main_item_id) & (main_cte.c.restaurant_id==Modifier.restaurant_id))
 
-        union = main_cte.union_all(modifiers_q)
+        union = main_cte.union(modifiers_q)
         q = db.session.query(union.c.id, union.c.name, union.c.restaurant_id, union.c.main_item_id)
 
-        resp = q.all()
+        resp = _build_tree(MenuItemSchema().dump(q.all(), many=True))
 
         return jsonify(resp)
+
+
+def _build_tree(items):
+    tree = items[:]
+    for item in reversed(tree):
+        for parent in reversed(tree):
+            if item['main_item_id'] == parent['id']:
+                parent.setdefault('modifiers', []).append(item)
+                del tree[-1]
+                break
+        del item['main_item_id']
+        item.setdefault('modifiers', [])
+    return tree
